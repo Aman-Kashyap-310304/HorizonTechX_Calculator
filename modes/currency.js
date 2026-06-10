@@ -11,34 +11,55 @@ class CurrencyCalculator {
         
         this.attachListeners();
         this.fetchLiveRates();
+
+        // Handle scaling adjustments on layout transformations
+        window.addEventListener('resize', () => this.adjustResultFontSize());
     }
 
     async fetchLiveRates() {
         try {
             this.rateTextDisplay.innerText = "Fetching live rates...";
             const response = await fetch('https://open.er-api.com/v6/latest/USD');
+            if (!response.ok) throw new Error("Network latency or rate limit");
+            
             const data = await response.json();
             
             if(data && data.rates) {
                 this.rates = data.rates;
                 this.calculate();
             } else {
-                throw new Error("Invalid API Response");
+                throw new Error("Invalid API Response Structure");
             }
         } catch (error) {
             console.error("Error fetching rates:", error);
-            this.rateTextDisplay.innerText = "Error: Could not load live rates.";
-            this.resultDisplay.innerText = "0.00";
+            this.rateTextDisplay.innerHTML = `<span class="text-danger fw-semibold">Offline Mode (Using Base Standard Ratios)</span>`;
+            
+            // Fallback hardcoded static core rates dataset to ensure zero-break operation if API drops
+            this.rates = { 
+                USD: 1, EUR: 0.92, GBP: 0.78, INR: 83.50, JPY: 156.20, AUD: 1.51, 
+                CAD: 1.37, CHF: 0.90, CNY: 7.25, SGD: 1.35, AED: 3.67 
+            };
+            this.calculate();
         }
     }
 
     attachListeners() {
-        // Standard input triggers
-        this.amountInput.addEventListener('input', () => this.calculate());
+        // Strict input filters preventing visual clutter and layout breaking characters
+        this.amountInput.addEventListener('keydown', (e) => {
+            if (['-', '+', 'e', 'E'].includes(e.key)) {
+                e.preventDefault(); // Stop exponents and negative values out of the gate
+            }
+        });
+
+        this.amountInput.addEventListener('input', () => {
+            // Self-corrective cleaning mechanism for copy-pasted anomalies
+            if (this.amountInput.value < 0) this.amountInput.value = 0;
+            this.calculate();
+        });
+
         this.fromSelect.addEventListener('change', () => this.calculate());
         this.toSelect.addEventListener('change', () => this.calculate());
 
-        // Swap Button Logic
         this.swapBtn.addEventListener('click', () => {
             const temp = this.fromSelect.value;
             this.fromSelect.value = this.toSelect.value;
@@ -50,83 +71,111 @@ class CurrencyCalculator {
             this.calculate();
         });
 
-        // --- 1. Attach Smart Dropdown Typing Responders ---
         this.setupSmartDropdown(this.fromSelect);
         this.setupSmartDropdown(this.toSelect);
 
-        // --- 2. Attach Global Hotkeys for Currency Mode ---
         document.addEventListener('keydown', (e) => {
             const currContainer = document.getElementById('currency-mode');
             if (!currContainer || !currContainer.classList.contains('active')) return;
 
-            // Allow normal number typing in the amount field without triggering shortcuts
             if (document.activeElement === this.amountInput && /^[0-9.]$/.test(e.key)) return;
 
             const key = e.key.toLowerCase();
-            
-            // Global Jump Shortcuts
-            if (key === 'f') { e.preventDefault(); this.fromSelect.focus(); } // Jump to Drop1
-            if (key === 't') { e.preventDefault(); this.toSelect.focus(); }   // Jump to Drop2
-            if (key === 'a') { e.preventDefault(); this.amountInput.focus(); } // Jump to Amount
-            if (key === 's') { e.preventDefault(); this.swapBtn.click(); }     // Trigger Swap
+            if (key === 'f') { e.preventDefault(); this.fromSelect.focus(); }
+            if (key === 't') { e.preventDefault(); this.toSelect.focus(); }
+            if (key === 'a') { e.preventDefault(); this.amountInput.focus(); }
+            if (key === 's') { e.preventDefault(); this.swapBtn.click(); }
         });
     }
 
-    // --- Core Feature: 2-Digit Key Buffer Algorithm ---
+    // --- Upgraded Feature: Complete 3-Digit ISO Strict Buffering Algorithm ---
     setupSmartDropdown(selectElement) {
         let keyBuffer = '';
         let timeout;
 
         selectElement.addEventListener('keydown', (e) => {
-            // Ignore system navigation keys
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Tab', 'Escape'].includes(e.key)) return;
             
-            // Intercept Alphabet keystrokes
             if (/^[a-zA-Z]$/.test(e.key)) {
-                e.preventDefault(); // Stop native browser jump behavior
+                e.preventDefault(); 
                 
-                keyBuffer += e.key.toUpperCase(); // Add to buffer (e.g., 'U', then 'S')
+                keyBuffer += e.key.toUpperCase();
                 
-                // Clear buffer after 800ms of inactivity
                 clearTimeout(timeout);
-                timeout = setTimeout(() => { keyBuffer = ''; }, 800); 
+                timeout = setTimeout(() => { keyBuffer = ''; }, 1000); // 1s window for typing full 3-letter codes
 
-                // Search options for a strict match on the 2-digit prefix (e.g., "US")
                 const options = Array.from(selectElement.options);
-                const match = options.find(opt => opt.text.trim().startsWith(keyBuffer));
+                
+                // Scan list trying to find perfect match against the explicit 3-letter ISO code string
+                let match = options.find(opt => {
+                    const cleanText = opt.text.replace(/\u00A0/g, ' ').replace(/\s+/g, ' ').trim();
+                    // Split content elements: "IN INR - Indian Rupee" -> looks precisely at index 1 ("INR")
+                    const parts = cleanText.split(' ');
+                    return parts[1] && parts[1].startsWith(keyBuffer);
+                });
 
                 if (match) {
                     selectElement.value = match.value;
-                    this.calculate(); // Instantly calculate on successful match
+                    this.calculate();
                 }
 
-                // If user typed 2 characters, reset buffer immediately for next rapid entry
-                if (keyBuffer.length === 2) {
+                if (keyBuffer.length === 3) {
                     keyBuffer = ''; 
                 }
             }
         });
     }
 
+    // --- Dynamic Typography Scaling Engine ---
+    adjustResultFontSize() {
+        this.resultDisplay.style.transition = 'none';
+        this.resultDisplay.style.fontSize = '2.25rem'; // Default starting base scale
+        
+        const parentCard = this.resultDisplay.parentElement;
+        const maxSafeWidth = parentCard.clientWidth - 40; 
+        const currentWidth = this.resultDisplay.scrollWidth;
+
+        if (currentWidth > maxSafeWidth) {
+            let adjustedRatio = (maxSafeWidth / currentWidth) * 0.95;
+            let dynamicSize = 2.25 * adjustedRatio;
+            
+            if (dynamicSize < 1.1) dynamicSize = 1.1; // Strict compression floor limits
+            this.resultDisplay.style.fontSize = `${dynamicSize}rem`;
+        }
+    }
+
     calculate() {
-        if (Object.keys(this.rates).length === 0) return; 
+        if (!this.rates || Object.keys(this.rates).length === 0) return; 
 
         const fromCurrency = this.fromSelect.value;
         const toCurrency = this.toSelect.value;
-        const amount = parseFloat(this.amountInput.value) || 0;
+        const amount = parseFloat(this.amountInput.value);
+
+        // Fail-safe calculation bounding checks against edge cases or NaN conversion items
+        if (isNaN(amount) || amount <= 0) {
+            this.resultDisplay.innerText = "0.00";
+            this.adjustResultFontSize();
+            return;
+        }
 
         const fromRate = this.rates[fromCurrency];
         const toRate = this.rates[toCurrency];
         
+        if (!fromRate || !toRate) return;
+
         const rawResult = (amount / fromRate) * toRate;
         const singleUnitRate = (1 / fromRate) * toRate;
 
+        // Clean international precision formatting limits contextually matching user standards
         this.resultDisplay.innerText = rawResult.toLocaleString(undefined, { 
             minimumFractionDigits: 2, 
             maximumFractionDigits: 2 
         });
 
         this.rateTextDisplay.innerText = `1 ${fromCurrency} = ${singleUnitRate.toFixed(4)} ${toCurrency}`;
+        
+        // Execute dynamic scaling layout calculations
+        this.adjustResultFontSize();
     }
 }
 
@@ -135,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currContainer = document.getElementById('currency-mode');
     if (!currContainer) return;
 
+    // Massively expanded global pool tracking hyper-active trading lines
     const currencyList = [
         { code: 'USD', name: 'US Dollar', prefix: 'US' },
         { code: 'EUR', name: 'Euro', prefix: 'EU' },
@@ -150,7 +200,15 @@ document.addEventListener('DOMContentLoaded', () => {
         { code: 'MXN', name: 'Mexican Peso', prefix: 'MX' },
         { code: 'BRL', name: 'Brazilian Real', prefix: 'BR' },
         { code: 'ZAR', name: 'South African Rand', prefix: 'ZA' },
-        { code: 'KRW', name: 'South Korean Won', prefix: 'KR' }
+        { code: 'KRW', name: 'South Korean Won', prefix: 'KR' },
+        { code: 'NZD', name: 'New Zealand Dollar', prefix: 'NZ' },
+        { code: 'HKD', name: 'Hong Kong Dollar', prefix: 'HK' },
+        { code: 'SEK', name: 'Swedish Krona', prefix: 'SE' },
+        { code: 'THB', name: 'Thai Baht', prefix: 'TH' },
+        { code: 'MYR', name: 'Malaysian Ringgit', prefix: 'MY' },
+        { code: 'SAR', name: 'Saudi Riyal', prefix: 'SA' },
+        { code: 'RUB', name: 'Russian Ruble', prefix: 'RU' },
+        { code: 'TRY', name: 'Turkish Lira', prefix: 'TR' }
     ];
 
     const generateOptions = (selectedCode) => {
@@ -163,11 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const styleBlock = document.createElement('style');
     styleBlock.innerHTML = `
-        .currency-scroll-wrapper { max-height: 70vh; overflow-y: auto; padding: 0 5px; }
-        .currency-scroll-wrapper::-webkit-scrollbar { width: 6px; }
+        .currency-scroll-wrapper { max-height: 72vh; overflow-y: auto; padding: 0 4px; }
+        .currency-scroll-wrapper::-webkit-scrollbar { width: 5px; }
         .currency-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--nav-text-inactive); border-radius: 10px; }
         
-        .result-card { background-color: var(--btn-num-bg); border-radius: 16px; padding: 20px; }
+        .result-card { background-color: var(--btn-num-bg); border-radius: 16px; padding: 20px; position: relative; }
         
         .custom-curr-select, .custom-curr-input {
             background-color: transparent !important;
@@ -180,11 +238,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .custom-curr-input { font-size: 1.5rem; font-weight: 500; }
         .custom-curr-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
         
+        #curr-result {
+            font-weight: 500;
+            margin-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+            width: 100%;
+            display: block;
+            line-height: 1.2;
+        }
+
         .swap-container {
             display: flex;
             justify-content: center;
-            margin-top: -24px;
-            margin-bottom: -24px;
+            margin-top: -22px;
+            margin-bottom: -22px;
             position: relative;
             z-index: 10;
         }
@@ -207,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <select id="curr-from" class="form-select form-select-lg custom-curr-select mb-2">
                     ${generateOptions('USD')}
                 </select>
-                <input type="number" id="curr-amount" class="form-control form-control-lg custom-curr-input" placeholder="0.00" value="100">
+                <input type="number" id="curr-amount" class="form-control form-control-lg custom-curr-input" placeholder="0.00" value="100" min="0">
             </div>
 
             <div class="swap-container">
@@ -221,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <select id="curr-to" class="form-select form-select-lg custom-curr-select mb-2">
                     ${generateOptions('EUR')}
                 </select>
-                <div id="curr-result" class="display-4 fw-medium text-body mt-2 text-break">0.00</div>
+                <div id="curr-result">0.00</div>
             </div>
 
             <div class="result-card text-center shadow-sm">

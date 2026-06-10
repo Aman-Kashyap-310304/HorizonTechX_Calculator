@@ -3,6 +3,9 @@ class ScientificCalculator {
         this.previousOperandElement = previousOperandElement;
         this.currentOperandElement = currentOperandElement;
         this.clear();
+
+        // Handle window resizing to keep fonts scaled perfectly
+        window.addEventListener('resize', () => this.updateDisplay());
     }
 
     clear() {
@@ -15,7 +18,6 @@ class ScientificCalculator {
         if (this.isComputed) return;
         if (this.expression === '0') return;
         
-        // Remove trailing functions cleanly in one backspace (e.g., "sin(" or "log(")
         if (/(sin\(|cos\(|tan\(|asin\(|acos\(|atan\(|log\(|ln\(|√\()$/.test(this.expression)) {
             this.expression = this.expression.replace(/(sin\(|cos\(|tan\(|asin\(|acos\(|atan\(|log\(|ln\(|√\()$/, '');
         } else {
@@ -31,30 +33,29 @@ class ScientificCalculator {
             this.isComputed = false;
         }
         
-        // Prevent multiple consecutive decimals
         if (val === '.' && this.expression.match(/[\d]+\.[\d]*$/)) return;
         
+        // Prevent insane memory overflows while typing long expressions
+        if (this.expression.length > 60) return;
+
         if (this.expression === '0' && val !== '.') {
             this.expression = val.toString();
         } else {
             this.expression += val.toString();
         }
 
-        // Run the Smart Typing Detection
         this.autoDetectFunction();
     }
 
     autoDetectFunction() {
-        // Automatically convert typed letters into formatted calculator functions
         const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'ln'];
         for (let fn of funcs) {
             if (this.expression.endsWith(fn)) {
-                this.expression += '('; // Auto-add the parenthesis
+                this.expression += '('; 
                 break;
             }
         }
         
-        // Auto-convert specific text shortcuts
         if (this.expression.endsWith('sqrt')) {
             this.expression = this.expression.slice(0, -4) + '√(';
         }
@@ -69,24 +70,19 @@ class ScientificCalculator {
         try {
             let evalString = this.expression;
 
-            // 1. Format visual operators to JS Math operators
             evalString = evalString.replace(/×/g, '*').replace(/÷/g, '/');
 
-            // 2. Implicit Multiplication (e.g., "2π" -> "2*π", "5sin(" -> "5*sin(")
             evalString = evalString.replace(/(\d)(π|e|sin|cos|tan|asin|acos|atan|log|ln|√|\()/g, '$1*$2');
             evalString = evalString.replace(/(\))(π|e|sin|cos|tan|asin|acos|atan|log|ln|√|\(|\d)/g, '$1*$2');
 
-            // 3. Map constants, square roots, and exponents
             evalString = evalString.replace(/π/g, 'Math.PI')
                                    .replace(/e/g, 'Math.E')
                                    .replace(/√\(/g, 'sqrt(')
                                    .replace(/\^2/g, '**2')
                                    .replace(/\^/g, '**');
 
-            // 4. Resolve Factorials (e.g., "5!" -> "factorial(5)")
             evalString = evalString.replace(/(\d+)!/g, 'factorial($1)');
 
-            // 5. Auto-close missing parentheses
             let openParens = (evalString.match(/\(/g) || []).length;
             let closeParens = (evalString.match(/\)/g) || []).length;
             while (openParens > closeParens) {
@@ -94,7 +90,6 @@ class ScientificCalculator {
                 closeParens++;
             }
 
-            // 6. Advanced Math Engine (Converts standard Radians to correct Degrees)
             const mathScope = `
                 const sin = (d) => Math.sin(d * Math.PI / 180);
                 const cos = (d) => Math.cos(d * Math.PI / 180);
@@ -114,11 +109,12 @@ class ScientificCalculator {
                 return (${evalString});
             `;
 
-            // Evaluate the injected math environment safely
             let result = new Function(mathScope)();
 
-            // Clean up extreme floating point precision errors (e.g., 0.1 + 0.2)
-            result = Math.round(result * 10000000000) / 10000000000;
+            // Clean up float errors only on reasonable numbers to protect massive 'e' calculations
+            if (Math.abs(result) < 1e12) {
+                result = Math.round(result * 10000000000) / 10000000000;
+            }
 
             if (isNaN(result) || !isFinite(result)) throw new Error("Math Error");
 
@@ -133,9 +129,51 @@ class ScientificCalculator {
         }
     }
 
+    // --- UX Preservation Method 1: Improved Formatting ---
+    formatDisplayNumber(numStr) {
+        if (numStr === 'NaN' || numStr === 'Infinity' || numStr === '-Infinity') return 'Error';
+        
+        let str = numStr.toString();
+        let parsed = parseFloat(str);
+        
+        // Triggers 'e' notation at 15 digits (JS precision limit) for professional accuracy
+        if (Math.abs(parsed) >= 1e15 || (Math.abs(parsed) < 1e-6 && Math.abs(parsed) > 0)) {
+            return parsed.toExponential(6); 
+        }
+        
+        return str;
+    }
+
+    // --- UX Preservation Method 2: Mathematical Auto-Scaling ---
+    autoScaleFont(element) {
+        element.style.transition = 'none';
+        element.style.fontSize = '4.5rem'; // Base size
+        
+        const parentWidth = element.parentElement.clientWidth - 40; 
+        const textWidth = element.scrollWidth;
+
+        // Optimized check: If the formatted number is still too wide, scale it
+        if (textWidth > parentWidth) {
+            let newSize = 4.5 * (parentWidth / textWidth) * 0.95; 
+            
+            // Floor limit remains consistent
+            if (newSize < 1.0) newSize = 1.0; 
+            
+            element.style.fontSize = `${newSize}rem`;
+        }
+
+        requestAnimationFrame(() => {
+            element.style.transition = 'font-size 0.05s ease-out';
+        });
+    }
+
     updateDisplay() {
-        this.currentOperandElement.innerText = this.expression;
+        const formattedExpression = this.formatDisplayNumber(this.expression);
+        
+        this.currentOperandElement.innerText = formattedExpression;
         this.previousOperandElement.innerText = this.previousExpression;
+
+        this.autoScaleFont(this.currentOperandElement);
     }
 }
 
@@ -144,7 +182,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const sciContainer = document.getElementById('scientific-mode');
     if (!sciContainer) return;
 
-    // Injecting the exact 5x7 UI grid into the placeholder
+    // --- CSS Injection: The "Anti-Dancing" UI Lock ---
+    const styleBlock = document.createElement('style');
+    styleBlock.innerHTML = `
+        .sci-btn { height: min(55px, 6.5vh) !important; padding: 0; }
+        
+        #current-operand {
+            height: 85px;          /* Locks container height permanently */
+            line-height: 85px;     /* Anchors text vertically so shrinking font doesn't jump */
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Graceful fallback if text hits minimum floor size */
+            width: 100%;
+        }
+        #previous-operand {
+            min-height: 35px;      /* Prevents top row from shifting */
+            margin-bottom: 5px;
+        }
+        .display-area {
+            justify-content: flex-end !important;
+        }
+    `;
+    document.head.appendChild(styleBlock);
+
+    // Strip old bootstrap font classes that interfere with mathematical scaling
+    const currentOperandElement = document.getElementById('current-operand');
+    const previousOperandElement = document.getElementById('previous-operand');
+    currentOperandElement.classList.remove('display-1', 'display-2', 'display-3', 'display-4', 'display-5', 'display-6');
+
     sciContainer.innerHTML = `
         <div class="row g-2 mb-2">
             <div class="col"><button class="btn w-100 rounded-pill fs-6 custom-number sci-btn" data-val="sin(">sin</button></div>
@@ -195,16 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
-    // Ensure buttons scale slightly smaller to fit 7 rows on a laptop screen
-    const styleBlock = document.createElement('style');
-    styleBlock.innerHTML = `.sci-btn { height: min(55px, 6.5vh) !important; padding: 0; }`;
-    document.head.appendChild(styleBlock);
-
-    const previousOperandElement = document.getElementById('previous-operand');
-    const currentOperandElement = document.getElementById('current-operand');
     const calculator = new ScientificCalculator(previousOperandElement, currentOperandElement);
 
-    // --- Mouse Click Listeners ---
     const sciButtons = sciContainer.querySelectorAll('.sci-btn[data-val]');
     const equalsButton = document.getElementById('sci-equals');
     const clearButton = document.getElementById('sci-clear');
@@ -229,14 +287,12 @@ document.addEventListener('DOMContentLoaded', () => {
         calculator.updateDisplay();
     });
 
-    // --- Advanced Full Keyboard Listeners ---
     document.addEventListener('keydown', (event) => {
         if(!sciContainer.classList.contains('active')) return;
 
         const key = event.key;
         const code = event.code;
 
-        // Catch numbers (Standard Row & Numpad)
         const isNumber = /^[0-9]$/.test(key) || (code.startsWith('Numpad') && code.length === 7);
         if (isNumber) {
             const num = code.startsWith('Numpad') ? code.slice(-1) : key;
@@ -245,11 +301,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Catch standard math operators and decimals
         const validSymbols = /^[.+\-*\/()^!e]$/;
         if (validSymbols.test(key) || code === 'NumpadDecimal' || code === 'NumpadAdd' || code === 'NumpadSubtract' || code === 'NumpadMultiply' || code === 'NumpadDivide') {
             
-            if (key === '/' || code === 'NumpadDivide') event.preventDefault(); // Stop quick-find
+            if (key === '/' || code === 'NumpadDivide') event.preventDefault(); 
             
             let val = key;
             if (key === '*' || code === 'NumpadMultiply') val = '×';
@@ -263,9 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Catch Alphabet typing for Smart Auto-Detect functions (s, i, n, etc.)
         if (/^[a-z]$/i.test(key)) {
-            // Map p to π directly as a shorthand
             if (key.toLowerCase() === 'p') {
                 calculator.append('π');
             } else {
@@ -275,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Execution Actions
         if (key === 'Enter' || key === '=' || code === 'NumpadEnter') {
             event.preventDefault();
             calculator.compute();

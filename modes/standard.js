@@ -3,6 +3,8 @@ class StandardCalculator {
         this.previousOperandTextElement = previousOperandTextElement;
         this.currentOperandTextElement = currentOperandTextElement;
         this.clear();
+        
+        window.addEventListener('resize', () => this.updateDisplay());
     }
 
     clear() {
@@ -27,6 +29,9 @@ class StandardCalculator {
 
         if (number === '.' && this.currentOperand.includes('.')) return;
         
+        // Memory Protection: Limit raw string length before formatting applies
+        if (this.currentOperand.replace(/[^0-9]/g, '').length > 25) return;
+
         if (this.currentOperand === '0' && number !== '.') {
             this.currentOperand = number.toString();
         } else {
@@ -59,7 +64,6 @@ class StandardCalculator {
         
         this.history.push(this.currentOperand);
 
-        // Pass 1: Handle Multiplication and Division (BODMAS)
         let pass1 = [];
         for (let i = 0; i < this.history.length; i++) {
             let token = this.history[i];
@@ -83,7 +87,6 @@ class StandardCalculator {
             }
         }
 
-        // Pass 2: Handle Addition and Subtraction
         let result = parseFloat(pass1[0]);
         for (let i = 1; i < pass1.length; i += 2) {
             let operator = pass1[i];
@@ -93,7 +96,10 @@ class StandardCalculator {
             if (operator === '-') result -= next;
         }
 
-        result = Math.round(result * 10000000000) / 10000000000;
+        // Clean up JS float errors only on reasonable numbers to protect massive 'e' calculations
+        if (Math.abs(result) < 1e12) {
+            result = Math.round(result * 10000000000) / 10000000000;
+        }
 
         this.currentOperand = result.toString();
         this.history = []; 
@@ -106,15 +112,89 @@ class StandardCalculator {
         this.currentOperand = (current / 100).toString();
     }
 
+    formatDisplayNumber(numStr) {
+        if (numStr === 'NaN' || numStr === 'Infinity' || numStr === '-Infinity') return 'Error';
+        
+        let str = numStr.toString();
+        
+        // Auto convert to scientific notation if > 20 digits to prevent horizontal overflow
+        if (str.toLowerCase().includes('e') || str.replace(/[^0-9]/g, '').length > 20) {
+            const parsed = parseFloat(str);
+            if (!isNaN(parsed)) {
+                return parsed.toExponential(6); 
+            }
+        }
+        return str;
+    }
+
+    // --- Core UX Fix: High-Performance Mathematical Auto-Scaling ---
+    autoScaleFont(element) {
+        // 1. Temporarily disable CSS transitions to take an instant, invisible measurement
+        element.style.transition = 'none';
+        element.style.fontSize = '4.5rem';
+        
+        // 2. Measure the raw, unconstrained text width
+        const parentWidth = element.parentElement.clientWidth - 40; 
+        const textWidth = element.scrollWidth;
+
+        // 3. Mathematically scale the font down in a single frame if it overflows
+        if (textWidth > parentWidth) {
+            // (parentWidth / textWidth) gets the perfect scale ratio. 
+            // 0.95 acts as a slight safety buffer so the text doesn't touch the very edge.
+            let newSize = 4.5 * (parentWidth / textWidth) * 0.95; 
+            
+            // Set a hard floor limit
+            if (newSize < 1.2) newSize = 1.2;
+            
+            element.style.fontSize = `${newSize}rem`;
+        }
+
+        // 4. Restore the smooth transition for the user's next keystroke
+        requestAnimationFrame(() => {
+            element.style.transition = 'font-size 0.05s ease-out';
+        });
+    }
+
     updateDisplay() {
-        this.currentOperandTextElement.innerText = this.currentOperand;
+        const formattedOperand = this.formatDisplayNumber(this.currentOperand);
+        
+        this.currentOperandTextElement.innerText = formattedOperand;
         this.previousOperandTextElement.innerText = this.history.join(' ');
+
+        // Trigger measurement directly after text changes
+        this.autoScaleFont(this.currentOperandTextElement);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- CSS Injection: The "Anti-Dancing" UI Lock ---
+    const styleBlock = document.createElement('style');
+    styleBlock.innerHTML = `
+        #current-operand {
+            height: 85px;          /* Locks container height permanently */
+            line-height: 85px;     /* Anchors text vertically so shrinking font doesn't jump */
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Graceful fallback if text hits minimum floor size */
+            width: 100%;
+        }
+        #previous-operand {
+            min-height: 35px;      /* Prevents top row from shifting */
+            margin-bottom: 5px;
+        }
+        .display-area {
+            justify-content: flex-end !important;
+        }
+    `;
+    document.head.appendChild(styleBlock);
+
     const previousOperandTextElement = document.getElementById('previous-operand');
     const currentOperandTextElement = document.getElementById('current-operand');
+    
+    // Strip old bootstrap font classes that interfere with our JS mathematical scaling
+    currentOperandTextElement.classList.remove('display-1', 'display-2', 'display-3', 'display-4', 'display-5', 'display-6');
     
     const calculator = new StandardCalculator(previousOperandTextElement, currentOperandTextElement);
     const standardMode = document.getElementById('standard-mode');
@@ -162,16 +242,14 @@ document.addEventListener('DOMContentLoaded', () => {
             calculator.updateDisplay();
         });
 
-        // --- Supercharged Keyboard Event Listeners ---
+        // --- Hardware Keyboard Listeners ---
         document.addEventListener('keydown', (event) => {
             if(!standardMode.classList.contains('active')) return;
 
-            // Support both standard number row AND hardware Numpad codes
             const isNumber = /^[0-9]$/.test(event.key) || (event.code.startsWith('Numpad') && event.code.length === 7);
             const isDecimal = event.key === '.' || event.code === 'NumpadDecimal';
 
             if (isNumber) {
-                // Extract just the number, whether it comes from "1" or "Numpad1"
                 const num = event.code.startsWith('Numpad') ? event.code.slice(-1) : event.key;
                 calculator.appendNumber(num);
                 calculator.updateDisplay();
@@ -181,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculator.updateDisplay();
             }
             
-            // Operators (Supporting Numpad specific keys)
             if (event.key === '+' || event.code === 'NumpadAdd') {
                 calculator.chooseOperation('add');
                 calculator.updateDisplay();
@@ -200,7 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculator.updateDisplay();
             }
 
-            // Actions
             if (event.key === 'Enter' || event.key === '=' || event.code === 'NumpadEnter') {
                 event.preventDefault(); 
                 calculator.compute();

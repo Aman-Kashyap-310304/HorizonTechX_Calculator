@@ -55,8 +55,42 @@ class LoanCalculator {
     }
 
     formatCurrency(number) {
-        // Using en-IN to get the standard 1,00,000 comma formatting shown in your design
-        return '₹' + Math.round(number).toLocaleString('en-IN');
+        if (!isFinite(number) || isNaN(number)) return '₹0';
+        
+        const rounded = Math.round(number);
+        
+        // Enterprise UI Protection: Implement 'e' logic for strings exceeding 14 digits
+        if (rounded.toString().length > 14) {
+            return '₹' + number.toExponential(4); // e.g., ₹1.4700e+21
+        }
+        
+        return '₹' + rounded.toLocaleString('en-IN');
+    }
+
+    // Dynamic Font Scaling Logic
+    applyDynamicFontSize(element, textLength, isPrimary) {
+        // Clear previous dynamic classes
+        element.classList.remove('text-scale-large', 'text-scale-medium', 'text-scale-small', 'text-scale-primary-large', 'text-scale-primary-medium', 'text-scale-primary-small');
+        
+        if (isPrimary) {
+            // Sizing for the main EMI display
+            if (textLength > 15) {
+                element.classList.add('text-scale-primary-small');
+            } else if (textLength > 10) {
+                element.classList.add('text-scale-primary-medium');
+            } else {
+                element.classList.add('text-scale-primary-large');
+            }
+        } else {
+            // Sizing for the secondary grid displays (Total Interest / Payment)
+            if (textLength > 15) {
+                element.classList.add('text-scale-small');
+            } else if (textLength > 11) {
+                element.classList.add('text-scale-medium');
+            } else {
+                element.classList.add('text-scale-large');
+            }
+        }
     }
 
     calculate() {
@@ -75,20 +109,37 @@ class LoanCalculator {
         if (principal > 0 && months > 0) {
             if (annualRate > 0) {
                 const monthlyRate = annualRate / 12 / 100;
-                emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+                const compoundFactor = Math.pow(1 + monthlyRate, months);
+                
+                // UX Protection: Handle JS Infinity limits for massive tenures
+                if (compoundFactor === Infinity) {
+                    emi = principal * monthlyRate; // Converges to interest-only
+                } else {
+                    emi = principal * monthlyRate * compoundFactor / (compoundFactor - 1);
+                }
             } else {
-                emi = principal / months; // Zero interest scenario
+                emi = principal / months; 
             }
             totalPayment = emi * months;
             totalInterest = totalPayment - principal;
         }
 
+        // Format to strings (Will trigger 'e' logic if > 14 digits)
+        const strEmi = this.formatCurrency(emi);
+        const strInterest = this.formatCurrency(totalInterest);
+        const strPayment = this.formatCurrency(totalPayment);
+
         // Update DOM Text
-        this.emiDisplay.innerText = this.formatCurrency(emi);
-        this.totalInterestDisplay.innerText = this.formatCurrency(totalInterest);
-        this.totalPaymentDisplay.innerText = this.formatCurrency(totalPayment);
+        this.emiDisplay.innerText = strEmi;
+        this.totalInterestDisplay.innerText = strInterest;
+        this.totalPaymentDisplay.innerText = strPayment;
         this.labelPrincipal.innerText = `Principal: ${this.formatCurrency(principal)}`;
         this.labelInterest.innerText = `Interest: ${this.formatCurrency(totalInterest)}`;
+
+        // Autonomously scale font size based on string length to prevent UI breakage
+        this.applyDynamicFontSize(this.emiDisplay, strEmi.length, true);
+        this.applyDynamicFontSize(this.totalInterestDisplay, strInterest.length, false);
+        this.applyDynamicFontSize(this.totalPaymentDisplay, strPayment.length, false);
 
         // Update Visual Progress Bar
         if (totalPayment > 0) {
@@ -109,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const loanContainer = document.getElementById('loan-mode');
     if (!loanContainer) return;
 
-    // --- Injecting Custom CSS for Loan UI ---
     const styleBlock = document.createElement('style');
     styleBlock.innerHTML = `
         /* Dynamic form hiding */
@@ -133,8 +183,29 @@ document.addEventListener('DOMContentLoaded', () => {
         .btn-accent-custom { background-color: var(--btn-accent-bg) !important; color: white !important; border: none; }
         .btn-dark-custom { background-color: var(--btn-num-bg) !important; color: var(--text-secondary) !important; border: none; }
         
-        /* Result Cards */
+        /* Result Cards & UI Protections */
         .result-card { background-color: var(--btn-num-bg); border-radius: 16px; padding: 20px; }
+        
+        /* Seamless Horizontal Scroll for Massive Numbers */
+        .overflow-protect {
+            overflow-x: auto;
+            white-space: nowrap;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .overflow-protect::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
+        /* Dynamic Font Scaling Classes */
+        .text-scale-primary-large { font-size: 2.5rem; transition: font-size 0.2s ease; }
+        .text-scale-primary-medium { font-size: 1.8rem; transition: font-size 0.2s ease; }
+        .text-scale-primary-small { font-size: 1.4rem; transition: font-size 0.2s ease; }
+        
+        .text-scale-large { font-size: 1.5rem; transition: font-size 0.2s ease; }
+        .text-scale-medium { font-size: 1.1rem; transition: font-size 0.2s ease; }
+        .text-scale-small { font-size: 0.9rem; transition: font-size 0.2s ease; }
+
         .progress-bar-custom { height: 12px; border-radius: 10px; display: flex; overflow: hidden; margin-bottom: 12px; }
         .bg-principal { background-color: var(--btn-accent-bg); }
         .bg-interest { background-color: #ff6b6b; }
@@ -143,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(styleBlock);
 
-    // --- Injecting the Loan HTML ---
     loanContainer.innerHTML = `
         <div class="loan-scroll-wrapper w-100 pb-4">
             <div class="mb-3 text-start">
@@ -167,22 +237,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
 
-            <div class="result-card text-start mb-3 shadow-sm">
+            <div class="result-card text-start mb-3 shadow-sm overflow-protect">
                 <div class="text-secondary small mb-1">Monthly EMI</div>
-                <div class="fs-1 fw-bold lh-1 text-body" id="loan-emi">₹0</div>
+                <div class="fw-bold lh-1 text-body text-scale-primary-large" id="loan-emi">₹0</div>
             </div>
 
             <div class="row g-3 mb-3">
                 <div class="col-6">
-                    <div class="result-card text-start h-100 shadow-sm">
+                    <div class="result-card text-start h-100 shadow-sm overflow-protect">
                         <div class="text-secondary small mb-1">Total Interest</div>
-                        <div class="fs-4 fw-bold text-body" id="loan-total-interest">₹0</div>
+                        <div class="fw-bold text-body text-scale-large" id="loan-total-interest">₹0</div>
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="result-card text-start h-100 shadow-sm">
+                    <div class="result-card text-start h-100 shadow-sm overflow-protect">
                         <div class="text-secondary small mb-1">Total Payment</div>
-                        <div class="fs-4 fw-bold text-body" id="loan-total-payment">₹0</div>
+                        <div class="fw-bold text-body text-scale-large" id="loan-total-payment">₹0</div>
                     </div>
                 </div>
             </div>
@@ -193,28 +263,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div id="bar-principal" class="bg-principal" style="width: 100%;"></div>
                     <div id="bar-interest" class="bg-interest" style="width: 0%;"></div>
                 </div>
-                <div class="d-flex justify-content-between small text-secondary mt-2">
-                    <div><i class="bi bi-circle-fill dot-principal me-1" style="font-size: 0.6rem;"></i> <span id="label-principal">Principal: ₹0</span></div>
+                <div class="d-flex justify-content-between small text-secondary mt-2 overflow-protect">
+                    <div class="me-3"><i class="bi bi-circle-fill dot-principal me-1" style="font-size: 0.6rem;"></i> <span id="label-principal">Principal: ₹0</span></div>
                     <div><i class="bi bi-circle-fill dot-interest me-1" style="font-size: 0.6rem;"></i> <span id="label-interest">Interest: ₹0</span></div>
                 </div>
             </div>
         </div>
     `;
 
-    // Initialize logic
     new LoanCalculator();
 
-    // --- Dynamic Layout Manager ---
-    // Automatically hides the giant top display area when Loan mode is opened
     const calculatorContainer = document.querySelector('.calculator-container');
     const keypadArea = document.getElementById('keypad-area');
     
     const observer = new MutationObserver(() => {
         if (loanContainer.classList.contains('active')) {
             calculatorContainer.classList.add('hide-display-area');
-            keypadArea.classList.replace('flex-shrink-0', 'flex-grow-1'); // Let it take up the empty space
+            keypadArea.classList.replace('flex-shrink-0', 'flex-grow-1'); 
         } else {
-            // Restore normal layout if we switch back to standard or scientific
             if (document.getElementById('standard-mode').classList.contains('active') || 
                 document.getElementById('scientific-mode').classList.contains('active')) {
                 calculatorContainer.classList.remove('hide-display-area');
