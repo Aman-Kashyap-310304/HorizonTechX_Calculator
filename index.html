@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HorizonTechX Calculator</title>
+    /* SEO Meta Tags */
+    <meta name="description" content="A versatile calculator with multiple modes including standard, scientific, loan, and currency conversion.">
+    <meta name="keywords" content="calculator, standard calculator, scientific calculator, loan calculator, currency converter, web calculator">
+    <meta name="organization" content="HorizonTechX">
+    <meta name="author" content="Aman Kashyap">
+    <meta name="theme-color" content="#212529">
+    <meta name="og:title" content="HorizonTechX Calculator">
+    <meta name="og:description" content="A versatile calculator with multiple modes including standard, scientific, loan, and currency conversion.">
+    <meta name="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='12' y='4' width='40' height='56' rx='6' fill='%232563eb'/%3E%3Crect x='20' y='10' width='24' height='12' rx='2' fill='%23ffffff'/%3E%3Cg fill='%23ffffff'%3E%3Crect x='20' y='28' width='6' height='6' rx='1'/%3E%3Crect x='29' y='28' width='6' height='6' rx='1'/%3E%3Crect x='38' y='28' width='6' height='6' rx='1'/%3E%3Crect x='20' y='37' width='6' height='6' rx='1'/%3E%3Crect x='29' y='37' width='6' height='6' rx='1'/%3E%3Crect x='38' y='37' width='6' height='15' rx='1'/%3E%3Crect x='20' y='46' width='15' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E">
+    <meta name="og:url" content="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HorizonTechX Calculator">
+    <meta name="twitter:description" content="A versatile calculator with multiple modes including standard, scientific, loan, and currency conversion.">
+    <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='12' y='4' width='40' height='56' rx='6' fill='%232563eb'/%3E%3Crect x='20' y='10' width='24' height='12' rx='2' fill='%23ffffff'/%3E%3Cg fill='%23ffffff'%3E%3Crect x='20' y='28' width='6' height='6' rx='1'/%3E%3Crect x='29' y='28' width='6' height='6' rx='1'/%3E%3Crect x='38' y='28' width='6' height='6' rx='1'/%3E%3Crect x='20' y='37' width='6' height='6' rx='1'/%3E%3Crect x='29' y='37' width='6' height='6' rx='1'/%3E%3Crect x='38' y='37' width='6' height='15' rx='1'/%3E%3Crect x='20' y='46' width='15' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E">
+    <meta name="twitter:url" content="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="canonical" href="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
+    /* End of SEO Meta Tags */
+    /* Favicon and Stylesheets */
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect x="12" y="4" width="40" height="56" rx="6" fill="%232563eb"/%3E%3Crect x="20" y="10" width="24" height="12" rx="2" fill="%23ffffff"/%3E%3Cg fill="%23ffffff"%3E%3Crect x="20" y="28" width="6" height="6" rx="1"/%3E%3Crect x="29" y="28" width="6" height="6" rx="1"/%3E%3Crect x="38" y="28" width="6" height="6" rx="1"/%3E%3Crect x="20" y="37" width="6" height="6" rx="1"/%3E%3Crect x="29" y="37" width="6" height="6" rx="1"/%3E%3Crect x="38" y="37" width="6" height="15" rx="1"/%3E%3Crect x="20" y="46" width="15" height="6" rx="1"/%3E%3C/g%3E%3C/svg%3E'>
+    /* End of Favicon and Stylesheets */
+    /* Person Schema / Organization Schema */
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HorizonTechX",
+        "url": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/",
+        "logo": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='12' y='4' width='40' height='56' rx='6' fill='%232563eb'/%3E%3Crect x='20' y='10' width='24' height='12' rx='2' fill='%23ffffff'/%3E%3Cg fill='%23ffffff'%3E%3Crect x='20' y='28' width='6' height='6' rx='1'/%3E%3Crect x='29' y='28' width='6' height='6' rx='1'/%3E%3Crect x='38' y='28' width='6' height='6' rx='1'/%3E%3Crect x='20' y='37' width='6' height='6' rx='1'/%3E%3Crect x='29' y='37' width='6' height='6' rx='1'/%3E%3Crect x='38' y='37' width='6' height='15' rx='1'/%3E%3Crect x='20' y='46' width='15' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Aman Kashyap",
+        "url": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/",
+        "sameAs": [
+            "https://www.linkedin.com/in/aman-kashyap-310304/",
+            "https://github.com/Aman-Kashyap-310304",
+            "https://aman-kashyap-310304.github.io/Aman_Kashyap_Portfolio/",
+            "https://aman-kashyap-310304.github.io/Simple-Calculator/"
+        ]
+    }
+    </script>
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+
+    <main class="calculator-container d-flex flex-column shadow-lg position-relative overflow-hidden w-100 h-100" style="max-width: 400px; max-height: 850px;">
+        
+        <header class="d-flex justify-content-between align-items-center p-3 p-sm-4">
+            <div class="d-flex align-items-center gap-2">
+                <div class="brand-icon d-flex justify-content-center align-items-center rounded-3 text-white" style="width: 36px; height: 36px; background-color: #fba919;">
+                    <i class="bi bi-calculator fs-5"></i>
+                </div>
+                <div class="lh-sm">
+                    <h1 class="h6 mb-0 fw-bold">Calculator</h1>
+                    <span id="mode-subtitle" class="small text-secondary">Standard Mode</span>
+                </div>
+            </div>
+            
+            <button id="theme-toggle" class="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center border-0" style="width: 40px; height: 40px;" aria-label="Toggle Theme">
+                <span id="theme-icon" class="fs-6"><i class="bi bi-moon"></i></span>
+            </button>
+        </header>
+
+        <section class="display-area flex-grow-1 d-flex flex-column justify-content-end align-items-end p-4 text-break">
+            <div id="previous-operand" class="fs-4 text-secondary mb-1" style="min-height: 2rem;"></div>
+            <div id="current-operand" class="display-1 fw-light lh-1 text-body">0</div>
+        </section>
+
+        <section id="keypad-area" class="flex-shrink-0 px-3 pb-2">
+            
+            <div id="standard-mode" class="mode-view active">
+                <div class="row g-2 mb-2">
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-action" id="clear" style="height: 9vh; max-height: 75px;">C</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-action" id="backspace" style="height: 9vh; max-height: 75px;">⌫</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-action" id="percent" style="height: 9vh; max-height: 75px;">%</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="divide" style="height: 9vh; max-height: 75px;">÷</button></div>
+                </div>
+                
+                <div class="row g-2 mb-2">
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">7</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">8</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">9</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="multiply" style="height: 9vh; max-height: 75px;">×</button></div>
+                </div>
+                
+                <div class="row g-2 mb-2">
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">4</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">5</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">6</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="subtract" style="height: 9vh; max-height: 75px;">-</button></div>
+                </div>
+                
+                <div class="row g-2 mb-2">
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">1</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">2</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">3</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="add" style="height: 9vh; max-height: 75px;">+</button></div>
+                </div>
+                
+                <div class="row g-2">
+                    <div class="col-6"><button class="btn w-100 rounded-pill fs-4 text-start ps-5 custom-number zero-btn" style="height: 9vh; max-height: 75px;">0</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number decimal" style="height: 9vh; max-height: 75px;">.</button></div>
+                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" id="equals" style="height: 9vh; max-height: 75px;">=</button></div>
+                </div>
+            </div>
+
+            <div id="scientific-mode" class="mode-view d-none"></div>
+            <div id="loan-mode" class="mode-view d-none"></div>
+            <div id="currency-mode" class="mode-view d-none"></div>
+        </section>
+
+        <nav class="bottom-nav d-flex justify-content-around align-items-center mx-3 mb-3 p-2 rounded-4" style="background-color: var(--bs-body-bg); flex: 0 0 70px;">
+            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-warning" data-mode="standard">
+                <span class="fs-5"><i class="bi bi-calculator"></i></span>
+                <span class="fw-medium" style="font-size: 0.75rem;">Standard</span>
+            </button>
+            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-secondary" data-mode="scientific">
+                <span class="fs-5"><i class="bi bi-plus-slash-minus fs-4"></i></span>
+                <span class="fw-medium" style="font-size: 0.75rem;">Scientific</span>
+            </button>
+            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-secondary" data-mode="loan">
+                <span class="fs-5"><i class="bi bi-currency-dollar"></i></span>
+                <span class="fw-medium" style="font-size: 0.75rem;">Loan</span>
+            </button>
+            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-secondary" data-mode="currency">
+                <span class="fs-5"><i class="bi bi-arrow-left-right"></i></span>
+                <span class="fw-medium" style="font-size: 0.75rem;">Currency</span>
+            </button>
+        </nav>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="modes/standard.js"></script>
+    <script src="modes/scientific.js"></script>
+    <script src="modes/loan.js"></script>
+    <script src="modes/currency.js"></script>
+</body>
+</html>
