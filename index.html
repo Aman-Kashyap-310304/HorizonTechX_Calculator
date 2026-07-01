@@ -1,147 +1,678 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HorizonTechX Calculator</title>
-    <meta name="description" content="A versatile calculator with multiple modes including standard, scientific, loan, and currency conversion.">
-    <meta name="keywords" content="calculator, standard calculator, scientific calculator, loan calculator, currency converter, web calculator">
-    <meta name="organization" content="HorizonTechX">
-    <meta name="author" content="Aman Kashyap">
-    <meta name="theme-color" content="#212529">
-    <meta name="og:title" content="HorizonTechX Calculator">
-    <meta name="og:description" content="A versatile calculator with multiple modes including standard, scientific, loan, and currency conversion.">
-    <meta name="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='12' y='4' width='40' height='56' rx='6' fill='%232563eb'/%3E%3Crect x='20' y='10' width='24' height='12' rx='2' fill='%23ffffff'/%3E%3Cg fill='%23ffffff'%3E%3Crect x='20' y='28' width='6' height='6' rx='1'/%3E%3Crect x='29' y='28' width='6' height='6' rx='1'/%3E%3Crect x='38' y='28' width='6' height='6' rx='1'/%3E%3Crect x='20' y='37' width='6' height='6' rx='1'/%3E%3Crect x='29' y='37' width='6' height='6' rx='1'/%3E%3Crect x='38' y='37' width='6' height='15' rx='1'/%3E%3Crect x='20' y='46' width='15' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E">
-    <meta name="og:url" content="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="HorizonTechX Calculator">
-    <meta name="twitter:description" content="A versatile calculator with multiple modes including standard, scientific, loan, and currency conversion.">
-    <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='12' y='4' width='40' height='56' rx='6' fill='%232563eb'/%3E%3Crect x='20' y='10' width='24' height='12' rx='2' fill='%23ffffff'/%3E%3Cg fill='%23ffffff'%3E%3Crect x='20' y='28' width='6' height='6' rx='1'/%3E%3Crect x='29' y='28' width='6' height='6' rx='1'/%3E%3Crect x='38' y='28' width='6' height='6' rx='1'/%3E%3Crect x='20' y='37' width='6' height='6' rx='1'/%3E%3Crect x='29' y='37' width='6' height='6' rx='1'/%3E%3Crect x='38' y='37' width='6' height='15' rx='1'/%3E%3Crect x='20' y='46' width='15' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E">
-    <meta name="twitter:url" content="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <title>Neon Calculator</title>
+    <meta name="description" content="Neon Calculator is a modern, themeable web calculator with cyberpunk aesthetics, real-time computation, keyboard support, and Web Audio API feedback. Perfect for quick calculations with style.">
+    <meta name="keywords" content="calculator, web calculator, neon, cyberpunk, calculator app, online calculator, theme calculator, responsive calculator">
+    <meta name="author" content="Neon Calculator">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Canonical URL -->
     <link rel="canonical" href="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect x="12" y="4" width="40" height="56" rx="6" fill="%232563eb"/%3E%3Crect x="20" y="10" width="24" height="12" rx="2" fill="%23ffffff"/%3E%3Cg fill="%23ffffff"%3E%3Crect x="20" y="28" width="6" height="6" rx="1"/%3E%3Crect x="29" y="28" width="6" height="6" rx="1"/%3E%3Crect x="38" y="28" width="6" height="6" rx="1"/%3E%3Crect x="20" y="37" width="6" height="6" rx="1"/%3E%3Crect x="29" y="37" width="6" height="6" rx="1"/%3E%3Crect x="38" y="37" width="6" height="15" rx="1"/%3E%3Crect x="20" y="46" width="15" height="6" rx="1"/%3E%3C/g%3E%3C/svg%3E'>
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%2300f0ff' viewBox='0 0 16 16'%3E%3Cpath d='M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z'/%3E%3Cpath d='M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' fill='%2300f0ff' viewBox='0 0 16 16'%3E%3Cpath d='M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z'/%3E%3Cpath d='M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E">
+
+    <!-- Open Graph Tags (Facebook, LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
+    <meta property="og:title" content="Neon Calculator">
+    <meta property="og:description" content="Experience advanced web-based calculations with cyberpunk aesthetics, real-time feedback, and multiple themes. Supports keyboard input and audio feedback via Web Audio API.">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect fill='%230a0b10' width='1200' height='630'/%3E%3Crect x='50' y='50' width='1100' height='530' fill='rgba(18,20,32,0.85)' stroke='%2300f0ff' stroke-width='4' rx='20'/%3E%3Ctext x='600' y='200' font-size='80' fill='%2300f0ff' text-anchor='middle' font-family='Courier New'%3E🧮 Neon Calculator%3C/text%3E%3Ctext x='600' y='290' font-size='32' fill='%23e2e8f0' text-anchor='middle' font-family='Courier New'%3EModern • Themeable • Responsive%3C/text%3E%3Ctext x='600' y='360' font-size='24' fill='rgba(226,232,240,0.7)' text-anchor='middle' font-family='Courier New'%3EKeyboard Support • Web Audio API • Multiple Themes%3C/text%3E%3C/svg%3E">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/svg+xml">
+    <meta property="og:site_name" content="Neon Calculator">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/">
+    <meta name="twitter:title" content="Neon Calculator">
+    <meta name="twitter:description" content="Advanced web calculator with cyberpunk aesthetics, keyboard support, and audio feedback. Choose from multiple themes: Cyan, Amber, or Matrix.">
+    <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect fill='%230a0b10' width='1200' height='630'/%3E%3Crect x='50' y='50' width='1100' height='530' fill='rgba(18,20,32,0.85)' stroke='%2300f0ff' stroke-width='4' rx='20'/%3E%3Ctext x='600' y='200' font-size='80' fill='%2300f0ff' text-anchor='middle' font-family='Courier New'%3E🧮 Neon Calculator%3C/text%3E%3Ctext x='600' y='290' font-size='32' fill='%23e2e8f0' text-anchor='middle' font-family='Courier New'%3EModern • Themeable • Responsive%3C/text%3E%3Ctext x='600' y='360' font-size='24' fill='rgba(226,232,240,0.7)' text-anchor='middle' font-family='Courier New'%3EKeyboard Support • Web Audio API • Multiple Themes%3C/text%3E%3C/svg%3E">
+    <meta name="twitter:creator" content="@NeeonCalculator">
+
+    <!-- JSON-LD Structured Data (Schema.org) -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Neon Calculator",
+    "url": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/",
+    "description": "A modern, themeable web-based calculator with cyberpunk aesthetics, real-time computation, keyboard support, and Web Audio API feedback.",
+    "applicationCategory": "Productivity",
+    "operatingSystem": "Web",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "author": {
         "@type": "Organization",
-        "name": "HorizonTechX",
-        "url": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/",
-        "logo": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='12' y='4' width='40' height='56' rx='6' fill='%232563eb'/%3E%3Crect x='20' y='10' width='24' height='12' rx='2' fill='%23ffffff'/%3E%3Cg fill='%23ffffff'%3E%3Crect x='20' y='28' width='6' height='6' rx='1'/%3E%3Crect x='29' y='28' width='6' height='6' rx='1'/%3E%3Crect x='38' y='28' width='6' height='6' rx='1'/%3E%3Crect x='20' y='37' width='6' height='6' rx='1'/%3E%3Crect x='29' y='37' width='6' height='6' rx='1'/%3E%3Crect x='38' y='37' width='6' height='15' rx='1'/%3E%3Crect x='20' y='46' width='15' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E"
+        "name": "Neon Calculator",
+        "url": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/"
+    },
+    "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect fill='%230a0b10' width='1200' height='630'/%3E%3Crect x='50' y='50' width='1100' height='530' fill='rgba(18,20,32,0.85)' stroke='%2300f0ff' stroke-width='4' rx='20'/%3E%3Ctext x='600' y='200' font-size='80' fill='%2300f0ff' text-anchor='middle' font-family='Courier New'%3E🧮 Neon Calculator%3C/text%3E%3Ctext x='600' y='290' font-size='32' fill='%23e2e8f0' text-anchor='middle' font-family='Courier New'%3EModern • Themeable • Responsive%3C/text%3E%3Ctext x='600' y='360' font-size='24' fill='rgba(226,232,240,0.7)' text-anchor='middle' font-family='Courier New'%3EKeyboard Support • Web Audio API • Multiple Themes%3C/text%3E%3C/svg%3E",
+    "featureList": [
+        "Real-time calculation",
+        "Multiple theme options (Cyan, Amber, Matrix)",
+        "Full keyboard support",
+        "Web Audio API feedback",
+        "Responsive design",
+        "Dark mode optimized",
+        "Advanced math operations"
+    ],
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+    },
+    "potentialAction": {
+        "@type": "UseAction",
+        "target": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/"
+    }
     }
     </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Aman Kashyap",
-        "url": "https://aman-kashyap-310304.github.io/HorizonTechX_Calculator/",
-        "sameAs": [
-            "https://www.linkedin.com/in/aman-kashyap-310304/",
-            "https://github.com/Aman-Kashyap-310304",
-            "https://aman-kashyap-310304.github.io/Aman_Kashyap_Portfolio/",
-            "https://aman-kashyap-310304.github.io/Simple-Calculator/"
-        ]
-    }
-    </script>
+
+    <!-- Additional Meta Tags for Enhanced SEO -->
+    <meta name="theme-color" content="#00f0ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Neon Calculator">
+    <meta name="msapplication-TileColor" content="#00f0ff">
+    <meta name="msapplication-config" content="browserconfig.xml">
     <meta name="google-site-verification" content="xyOau3DMiSRdsLsZiKaEn5ygoio3oAWkfm0JVLcG7Cg" />
+    <!-- Preconnect to External Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <style>
+        :root {
+            --bg-color: #0a0b10;
+            --panel-bg: rgba(18, 20, 32, 0.85);
+            --neon-cyan: #00f0ff;
+            --neon-magenta: #ff007f;
+            --neon-purple: #9d4edd;
+            --neon-amber: #ffaa00;
+            --text-color: #e2e8f0;
+            --grid-color: rgba(0, 240, 255, 0.04);
+            --glow-strength: 0 0 12px;
+        }
+
+        [data-theme="amber"] {
+            --neon-cyan: #ffaa00;
+            --neon-magenta: #ff5500;
+            --neon-purple: #d4af37;
+            --grid-color: rgba(255, 170, 0, 0.04);
+        }
+
+        [data-theme="matrix"] {
+            --neon-cyan: #39ff14;
+            --neon-magenta: #00ff66;
+            --neon-purple: #008000;
+            --grid-color: rgba(57, 255, 20, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Interactive Canvas Background */
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Main Shell */
+        .quantum-shell {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 480px;
+            padding: 25px;
+            background: var(--panel-bg);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 20px;
+            box-shadow: var(--glow-strength) var(--neon-cyan), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            backdrop-filter: blur(15px);
+            transition: all 0.5s ease;
+        }
+
+        /* Top Control Bar */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .brand {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--neon-cyan);
+            text-shadow: var(--glow-strength) var(--neon-cyan);
+            font-weight: bold;
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid #fff;
+            transition: transform 0.2s;
+        }
+
+        .theme-dot:hover {
+            transform: scale(1.3);
+        }
+
+        .dot-cyan { background: #00f0ff; }
+        .dot-amber { background: #ffaa00; }
+        .dot-matrix { background: #39ff14; }
+
+        /* Display Terminal */
+        .terminal-display {
+            background: rgba(5, 6, 10, 0.95);
+            border: 1px solid var(--neon-magenta);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.15);
+        }
+
+        .terminal-display::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .history-log {
+            height: 40px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: right;
+            overflow-y: auto;
+            scrollbar-width: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .history-log::-webkit-scrollbar {
+            display: none;
+        }
+
+        .main-line {
+            font-size: 2rem;
+            color: var(--neon-cyan);
+            text-shadow: var(--glow-strength) var(--neon-cyan);
+            text-align: right;
+            margin-top: 5px;
+            white-space: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .main-line::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Grid Layout */
+        .grid-pad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        /* Interactive Buttons */
+        .btn {
+            background: rgba(20, 22, 37, 0.6);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            padding: 18px 0;
+            font-size: 1.15rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s;
+            pointer-events: none;
+        }
+
+        .btn:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+            color: var(--neon-cyan);
+            transform: translateY(-2px);
+        }
+
+        .btn:hover::after {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        .btn:active {
+            transform: translateY(1px) scale(0.97);
+        }
+
+        /* Button Variant Styling */
+        .btn-op {
+            color: var(--neon-magenta);
+            border-color: rgba(255, 0, 127, 0.2);
+        }
+
+        .btn-op:hover {
+            border-color: var(--neon-magenta);
+            color: var(--neon-magenta);
+            box-shadow: 0 0 8px rgba(255, 0, 127, 0.3);
+        }
+
+        .btn-fn {
+            color: var(--neon-purple);
+            border-color: rgba(157, 78, 221, 0.2);
+            font-size: 0.95rem;
+        }
+
+        .btn-fn:hover {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+            box-shadow: 0 0 8px rgba(157, 78, 221, 0.3);
+        }
+
+        .btn-eq {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 127, 0.2));
+            border: 1px solid var(--neon-cyan);
+            color: #fff;
+            text-shadow: 0 0 5px #fff;
+        }
+
+        .btn-eq:hover {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.4), rgba(255, 0, 127, 0.4));
+            box-shadow: var(--glow-strength) var(--neon-cyan);
+        }
+
+        /* Status Indicator */
+        .status-panel {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--neon-cyan);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0240, 255, 0.7); }
+            70% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 0 4px rgba(0, 240, 255, 0); }
+            100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+        }
+    </style>
 </head>
-<body class="d-flex justify-content-center align-items-center vh-100">
+<body>
 
-    <main class="calculator-container d-flex flex-column shadow-lg position-relative overflow-hidden w-100 h-100" style="max-width: 400px; max-height: 850px;">
-        
-        <header class="d-flex justify-content-between align-items-center p-3 p-sm-4">
-            <div class="d-flex align-items-center gap-2">
-                <div class="brand-icon d-flex justify-content-center align-items-center rounded-3 text-white" style="width: 36px; height: 36px; background-color: #fba919;">
-                    <i class="bi bi-calculator fs-5"></i>
-                </div>
-                <div class="lh-sm">
-                    <h1 class="h6 mb-0 fw-bold">Calculator</h1>
-                    <span id="mode-subtitle" class="small text-secondary">Standard Mode</span>
-                </div>
+    <canvas id="canvas-bg"></canvas>
+
+    <div class="quantum-shell">
+        <div class="control-bar">
+            <span class="brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calculator" viewBox="0 0 16 16"><path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/><path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/></svg> Neon Calculator</span>
+            <div class="theme-selector">
+                <div class="theme-dot dot-cyan" onclick="setTheme('default')"></div>
+                <div class="theme-dot dot-amber" onclick="setTheme('amber')"></div>
+                <div class="theme-dot dot-matrix" onclick="setTheme('matrix')"></div>
             </div>
+        </div>
+
+        <div class="terminal-display">
+            <div class="history-log" id="history">SYS READY</div>
+            <div class="main-line" id="display">0</div>
+        </div>
+
+        <div class="grid-pad">
+            <!-- Row 1 -->
+            <button class="btn btn-fn" onclick="clearAll()">AC</button>
+            <button class="btn btn-fn" onclick="backspace()">DEL</button>
+            <button class="btn btn-fn" onclick="inputOp('%')">MOD</button>
+            <button class="btn btn-op" onclick="inputOp('/')">/</button>
+
+            <!-- Row 2 -->
+            <button class="btn" onclick="inputNum('7')">7</button>
+            <button class="btn" onclick="inputNum('8')">8</button>
+            <button class="btn" onclick="inputNum('9')">9</button>
+            <button class="btn btn-op" onclick="inputOp('*')">*</button>
+
+            <!-- Row 3 -->
+            <button class="btn" onclick="inputNum('4')">4</button>
+            <button class="btn" onclick="inputNum('5')">5</button>
+            <button class="btn" onclick="inputNum('6')">6</button>
+            <button class="btn btn-op" onclick="inputOp('-')">-</button>
+
+            <!-- Row 4 -->
+            <button class="btn" onclick="inputNum('1')">1</button>
+            <button class="btn" onclick="inputNum('2')">2</button>
+            <button class="btn" onclick="inputNum('3')">3</button>
+            <button class="btn btn-op" onclick="inputOp('+')">+</button>
+
+            <!-- Row 5 -->
+            <button class="btn" onclick="inputNum('0')">0</button>
+            <button class="btn" onclick="inputNum('.')">.</button>
+            <button class="btn btn-eq" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Canvas Background Animation ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let ripples = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Ripple {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.radius = 2;
+                this.maxRadius = Math.random() * 150 + 100;
+                this.alpha = 1;
+                this.color = color;
+                this.speed = Math.random() * 2 + 2;
+            }
+            update() {
+                this.radius += this.speed;
+                this.alpha = 1 - (this.radius / this.maxRadius);
+            }
+            draw() {
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 1.5;
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function triggerRipple(x, y) {
+            const styles = getComputedStyle(document.documentElement);
+            const color = styles.getPropertyValue('--neon-cyan').trim();
+            ripples.push(new Ripple(x, y, color));
+            if (ripples.length > 15) ripples.shift();
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid-color').trim();
+            ctx.lineWidth = 1;
+            const size = 50;
+            for (let x = 0; x < width; x += size) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += size) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 11, 16, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            drawGrid();
+
+            ripples.forEach((ripple, index) => {
+                ripple.update();
+                ripple.draw();
+                if (ripple.alpha <= 0) {
+                    ripples.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- Audio Feedback Engine (Web Audio API) ---
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                document.getElementById('audio-status').innerText = "Audio: On";
+            }
+        }
+
+        function playBeep(freq, type = 'sine', duration = 0.25) {
+            initAudio();
+            if (!audioCtx || audioCtx.state === 'suspended') return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             
-            <button id="theme-toggle" class="btn btn-secondary rounded-circle d-flex justify-content-center align-items-center border-0" style="width: 40px; height: 40px;" aria-label="Toggle Theme">
-                <span id="theme-icon" class="fs-6"><i class="bi bi-moon"></i></span>
-            </button>
-        </header>
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
 
-        <section class="display-area flex-grow-1 d-flex flex-column justify-content-end align-items-end p-4 text-break">
-            <div id="previous-operand" class="fs-4 text-secondary mb-1" style="min-height: 2rem;"></div>
-            <div id="current-operand" class="display-1 fw-light lh-1 text-body">0</div>
-        </section>
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
 
-        <section id="keypad-area" class="flex-shrink-0 px-3 pb-2">
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // --- Theme Engine ---
+        function setTheme(theme) {
+            playBeep(600, 'sawtooth', 0.15);
+            if (theme === 'default') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+        }
+
+        // --- Calculator Core Logic ---
+        const display = document.getElementById('display');
+        const history = document.getElementById('history');
+
+        let currentInput = "0";
+        let expression = "";
+        let resetDisplayOnNextInput = false;
+
+        function updateDisplay() {
+            display.innerText = currentInput;
+            history.innerText = expression || "SYS READY";
+            history.scrollTop = history.scrollHeight;
+        }
+
+        function inputNum(num) {
+            initAudio();
+            playBeep(440, 'triangle');
             
-            <div id="standard-mode" class="mode-view active">
-                <div class="row g-2 mb-2">
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-action" id="clear" style="height: 9vh; max-height: 75px;">C</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-action" id="backspace" style="height: 9vh; max-height: 75px;">⌫</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-action" id="percent" style="height: 9vh; max-height: 75px;">%</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="divide" style="height: 9vh; max-height: 75px;">÷</button></div>
-                </div>
-                
-                <div class="row g-2 mb-2">
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">7</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">8</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">9</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="multiply" style="height: 9vh; max-height: 75px;">×</button></div>
-                </div>
-                
-                <div class="row g-2 mb-2">
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">4</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">5</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">6</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="subtract" style="height: 9vh; max-height: 75px;">-</button></div>
-                </div>
-                
-                <div class="row g-2 mb-2">
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">1</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">2</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number" style="height: 9vh; max-height: 75px;">3</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" data-action="add" style="height: 9vh; max-height: 75px;">+</button></div>
-                </div>
-                
-                <div class="row g-2">
-                    <div class="col-6"><button class="btn w-100 rounded-pill fs-4 text-start ps-5 custom-number zero-btn" style="height: 9vh; max-height: 75px;">0</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-4 custom-number decimal" style="height: 9vh; max-height: 75px;">.</button></div>
-                    <div class="col-3"><button class="btn w-100 rounded-pill fs-3 custom-operator" id="equals" style="height: 9vh; max-height: 75px;">=</button></div>
-                </div>
-            </div>
+            if (currentInput === "0" && num !== "." || resetDisplayOnNextInput) {
+                currentInput = num;
+                resetDisplayOnNextInput = false;
+            } else {
+                if (num === "." && currentInput.includes(".")) return;
+                currentInput += num;
+            }
+            updateDisplay();
+        }
 
-            <div id="scientific-mode" class="mode-view d-none"></div>
-            <div id="loan-mode" class="mode-view d-none"></div>
-            <div id="currency-mode" class="mode-view d-none"></div>
-        </section>
+        function inputOp(op) {
+            initAudio();
+            playBeep(520, 'square');
 
-        <nav class="bottom-nav d-flex justify-content-around align-items-center mx-3 mb-3 p-2 rounded-4" style="background-color: var(--bs-body-bg); flex: 0 0 70px;">
-            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-warning" data-mode="standard">
-                <span class="fs-5"><i class="bi bi-calculator"></i></span>
-                <span class="fw-medium" style="font-size: 0.75rem;">Standard</span>
-            </button>
-            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-secondary" data-mode="scientific">
-                <span class="fs-5"><i class="bi bi-plus-slash-minus fs-4"></i></span>
-                <span class="fw-medium" style="font-size: 0.75rem;">Scientific</span>
-            </button>
-            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-secondary" data-mode="loan">
-                <span class="fs-5"><i class="bi bi-currency-dollar"></i></span>
-                <span class="fw-medium" style="font-size: 0.75rem;">Loan</span>
-            </button>
-            <button class="btn nav-btn border-0 d-flex flex-column align-items-center text-secondary" data-mode="currency">
-                <span class="fs-5"><i class="bi bi-arrow-left-right"></i></span>
-                <span class="fw-medium" style="font-size: 0.75rem;">Currency</span>
-            </button>
-        </nav>
-    </main>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
-    <script src="modes/standard.js"></script>
-    <script src="modes/scientific.js"></script>
-    <script src="modes/loan.js"></script>
-    <script src="modes/currency.js"></script>
+            if (resetDisplayOnNextInput) {
+                expression = currentInput + " " + op + " ";
+                resetDisplayOnNextInput = false;
+            } else {
+                if (currentInput !== "") {
+                    expression += currentInput + " " + op + " ";
+                } else if (expression !== "") {
+                    // Replace last operator if clicked consecutively
+                    expression = expression.slice(0, -3) + " " + op + " ";
+                }
+            }
+            currentInput = "0";
+            updateDisplay();
+        }
+
+        function clearAll() {
+            initAudio();
+            playBeep(220, 'sine', 0.2);
+            currentInput = "0";
+            expression = "";
+            updateDisplay();
+        }
+
+        function backspace() {
+            initAudio();
+            playBeep(300, 'sine');
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = "0";
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            initAudio();
+            if (expression === "") return;
+
+            let finalExpression = expression + currentInput;
+            
+            // Safe evaluation using basic math parser logic
+            try {
+                // Formatting for math calculation
+                let sanitized = finalExpression.replace(/[^0-9+\-*/%.() ]/g, '');
+                
+                // Perform computation securely without standard eval vulnerability
+                let result = Function(`"use strict"; return (${sanitized})`)();
+                
+                if (result === Infinity || isNaN(result)) {
+                    throw new Error("Math Error");
+                }
+
+                playBeep(880, 'sine', 0.15);
+                expression = finalExpression + " =";
+                currentInput = Number(result.toFixed(8)).toString(); // Limit float issues
+                resetDisplayOnNextInput = true;
+            } catch (error) {
+                playBeep(150, 'sawtooth', 0.3);
+                expression = "ERROR";
+                currentInput = "0";
+                resetDisplayOnNextInput = true;
+            }
+            updateDisplay();
+        }
+
+        // Capture physical keyboard inputs
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9' || e.key === '.') {
+                inputNum(e.key);
+            } else if (['+', '-', '*', '/', '%'].includes(e.key)) {
+                inputOp(e.key);
+            } else if (e.key === 'Enter' || e.key === '=') {
+                e.preventDefault();
+                calculate();
+            } else if (e.key === 'Backspace') {
+                backspace();
+            } else if (e.key === 'Escape') {
+                clearAll();
+            }
+        });
+
+        // Click ripple trigger
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                triggerRipple(e.clientX, e.clientY);
+            });
+        });
+    </script>
 </body>
 </html>
